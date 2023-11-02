@@ -4,7 +4,13 @@ import { COLOR_GREY_SCALE } from "../../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../../constants/font";
 import { BODY_FONT_SIZES } from "../../constants/typography";
 
-const Text = ({ children, size = "xlarge" }) => {
+const Text = ({
+  children,
+  size = "xlarge",
+  color = "black",
+  bold = false,
+  style = {},
+}) => {
   const switchOnSize = () => {
     switch (size) {
       case "xlarge": {
@@ -35,9 +41,39 @@ const Text = ({ children, size = "xlarge" }) => {
     }
   };
 
+  const switchOnColor = () => {
+    if (color) {
+      return {
+        color,
+      };
+    }
+
+    return {};
+  };
+
+  const switchOnBold = () => {
+    if (bold) {
+      return {
+        fontFamily: FONT_FAMILY_URBANIST.semibold,
+      };
+    }
+
+    return {};
+  };
+
   return (
     <View>
-      <NativeText style={[styles.text, switchOnSize()]}>{children}</NativeText>
+      <NativeText
+        style={[
+          styles.text,
+          switchOnSize(),
+          switchOnColor(),
+          switchOnBold(),
+          style,
+        ]}
+      >
+        {children}
+      </NativeText>
     </View>
   );
 };

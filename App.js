@@ -1,10 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 
+import AuthNavigator from "./navigation/AuthNavigator";
 import OnBoardingNavigator from "./navigation/OnBoardingNavigator";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -32,7 +36,12 @@ export default function App() {
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <NavigationContainer>
-        <OnBoardingNavigator />
+        <Stack.Navigator>
+          <Stack.Group screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Onboarding" component={OnBoardingNavigator} />
+            <Stack.Screen name="Auth" component={AuthNavigator} />
+          </Stack.Group>
+        </Stack.Navigator>
       </NavigationContainer>
     </View>
   );

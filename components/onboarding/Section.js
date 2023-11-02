@@ -6,7 +6,7 @@ import Button from "../Button";
 import Header from "../typography/Header";
 import Text from "../typography/Text";
 
-const Section = ({ title, description, onContinue, step }) => {
+const Section = ({ title, description, onContinue, onSkip, step }) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerSection}>
@@ -16,16 +16,21 @@ const Section = ({ title, description, onContinue, step }) => {
       </View>
       <View style={styles.action}>
         <View style={styles.actionInner}>
-          <View style={{ flex: 1 }}>
-            <Button rounded variant="white">
-              Skip
+          {step !== 3 && (
+            <>
+              <Button onPressHandler={onSkip} rounded block variant="white">
+                Skip
+              </Button>
+              <Button onPressHandler={onContinue} block rounded>
+                Continue
+              </Button>
+            </>
+          )}
+          {step === 3 && (
+            <Button onPressHandler={onContinue} rounded block>
+              Get Started
             </Button>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Button onPressHandler={onContinue} rounded>
-              Continue
-            </Button>
-          </View>
+          )}
         </View>
       </View>
     </View>

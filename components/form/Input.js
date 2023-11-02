@@ -7,6 +7,7 @@ import { FORM_COLORS, SURFACE_LIGHT_DARK_LIGHT } from "../../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../../constants/font";
 import { BORDER_RADIUS, PADDING } from "../../constants/padding";
 import { BODY_FONT_SIZES } from "../../constants/typography";
+import Text from "../typography/Text";
 
 const Input = ({
   iconName = null,
@@ -15,6 +16,11 @@ const Input = ({
   secureTextEntry = false,
   multiline = false,
   style,
+  keyboardType = "default",
+  placeholder = "",
+  label = "",
+  onChange = null,
+  name = "",
 }) => {
   const [text, onChangeText] = useState("");
   const [onFocus, setOnFocus] = useState(false);
@@ -93,6 +99,11 @@ const Input = ({
 
   return (
     <View style={[styles.container, style]}>
+      {label && (
+        <Text style={styles.label} bold>
+          {label}
+        </Text>
+      )}
       <View style={[styles.wrapper, switchOnFocus(), switchOnDisable()]}>
         <View style={styles.textIcon}>
           {iconName && (
@@ -104,13 +115,23 @@ const Input = ({
             />
           )}
           <TextInput
-            placeholder="Lorem Ipsum"
+            placeholder={placeholder}
             placeholderTextColor={FORM_COLORS.input.placeholder}
             onChangeText={onChangeText}
             value={text}
             onFocus={() => setOnFocus(true)}
             onBlur={() => setOnFocus(false)}
             multiline={multiline}
+            onChange={(event) => {
+              console.log(onChange);
+              if (onChange) {
+                if (name) {
+                  onChange(name, event.nativeEvent.text);
+                } else {
+                  onChange(event.nativeEvent.text);
+                }
+              }
+            }}
             style={[
               styles.input,
               {
@@ -121,6 +142,7 @@ const Input = ({
             ]}
             secureTextEntry={secureTextEntry && !showPassword}
             editable={!disable}
+            keyboardType={keyboardType}
           />
         </View>
         {secureTextEntry && (
@@ -182,6 +204,9 @@ const styles = StyleSheet.create({
   disable: {
     borderColor: FORM_COLORS.input.disable,
     backgroundColor: FORM_COLORS.input.disable,
+  },
+  label: {
+    marginBottom: 4,
   },
 });
 

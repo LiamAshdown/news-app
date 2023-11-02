@@ -1,7 +1,8 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Touchable, Pressable } from "react-native";
 
-import { BUTTON_COLORS, WHITE } from "../constants/colors";
+import { BORDER_GREY_COLOR, BUTTON_COLORS, WHITE } from "../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../constants/font";
 import { BORDER_RADIUS, PADDING } from "../constants/padding";
 import { BODY_FONT_SIZES } from "../constants/typography";
@@ -14,6 +15,8 @@ const Button = ({
   shadow = false,
   onPressHandler = null,
   rounded = false,
+  block = false,
+  iconName = "",
 }) => {
   const [onPress, setOnPress] = useState(false);
 
@@ -48,7 +51,7 @@ const Button = ({
       case "white": {
         return {
           backgroundColor: BUTTON_COLORS.white,
-          borderColor: BUTTON_COLORS.white,
+          borderColor: BORDER_GREY_COLOR,
         };
       }
       default: {
@@ -75,7 +78,7 @@ const Button = ({
       }
       case "white": {
         return {
-          color: BUTTON_COLORS.primary,
+          color: BUTTON_COLORS.black,
         };
       }
       default: {
@@ -156,8 +159,30 @@ const Button = ({
     return {};
   };
 
+  const switchOnBlock = () => {
+    if (block) {
+      return {
+        flex: 1,
+      };
+    }
+
+    return {};
+  };
+
+  const switchOnIcon = () => {
+    if (rounded) {
+      return {
+        left: 20,
+      };
+    }
+
+    return {
+      left: 10,
+    };
+  };
+
   return (
-    <View>
+    <View style={[switchOnBlock()]}>
       <Pressable
         onPress={onButtonPress}
         onPressIn={onButtonPressIn}
@@ -172,6 +197,14 @@ const Button = ({
             switchOnRounded(),
           ]}
         >
+          {iconName && (
+            <Ionicons
+              name={iconName}
+              color={switchOnTextColor().color}
+              style={[styles.icon, switchOnIcon()]}
+              size={20}
+            />
+          )}
           <Text style={[styles.text, switchOnTextColor()]}>{children}</Text>
         </View>
       </Pressable>
@@ -184,12 +217,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderRadius: BORDER_RADIUS[8],
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center", // Add this
   },
   text: {
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
     letterSpacing: 0.2,
     textAlign: "center",
+  },
+  icon: {
+    position: "absolute",
   },
 });
 

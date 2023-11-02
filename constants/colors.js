@@ -1,5 +1,7 @@
 export const SURFACE_LIGHT_DARK_LIGHT = {
   3: "#FAFAFA",
+  8: "#E0E0E0",
+  7: "#EEEEEE",
 };
 
 export const WHITE = "#FFFFFF";
@@ -10,7 +12,11 @@ export const COLOR_GREY_SCALE = {
 
 export const THEME_COLORS = {
   primary: "#1A998E",
+  white: "#FFF",
+  black: "#35383F",
 };
+
+export const BORDER_GREY_COLOR = "#EEE";
 
 export const ALERT_COLORS = {
   background: {
@@ -50,6 +56,6 @@ export const FORM_COLORS = {
 
 export const BUTTON_COLORS = {
   primary: "#1A998E",
-  white: "#F0FBFA",
+  white: "#FFF",
   black: "#35383F",
 };

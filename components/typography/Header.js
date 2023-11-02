@@ -3,7 +3,7 @@ import { Text, StyleSheet } from "react-native";
 import { FONT_FAMILY_PLAYFAIR } from "../../constants/font";
 import { HEADER_FONT_SIZES } from "../../constants/typography";
 
-const Header = ({ children, size }) => {
+const Header = ({ children, size, style }) => {
   const onSwitchSize = () => {
     switch (size) {
       case "xlarge": {
@@ -39,7 +39,7 @@ const Header = ({ children, size }) => {
     }
   };
 
-  return <Text style={[styles.header, onSwitchSize()]}>{children}</Text>;
+  return <Text style={[styles.header, style, onSwitchSize()]}>{children}</Text>;
 };
 
 const styles = StyleSheet.create({

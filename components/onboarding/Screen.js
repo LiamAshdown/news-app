@@ -3,16 +3,17 @@ import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import Hero from "../../components/onboarding/Hero";
 import Section from "../../components/onboarding/Section";
 
-const Screen = ({ title, description, imageSrc, onContinue, step }) => {
+const Screen = ({ title, description, imageSrc, onContinue, onSkip, step }) => {
   return (
     <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <SafeAreaView style={styles.safeAreaView}>
         <ScrollView contentContainerStyle={styles.contentContainerStyle}>
           <Hero imageSrc={imageSrc} />
           <Section
             title={title}
             description={description}
             onContinue={onContinue}
+            onSkip={onSkip}
             step={step}
           />
         </ScrollView>
@@ -22,6 +23,10 @@ const Screen = ({ title, description, imageSrc, onContinue, step }) => {
 };
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   contentContainerStyle: {
     flexGrow: 1,
     paddingBottom: 24,
