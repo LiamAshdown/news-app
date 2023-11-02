@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  Touchable,
-} from "react-native";
+import { View, StyleSheet, Text, Touchable, Pressable } from "react-native";
 
 import { BUTTON_COLORS, WHITE } from "../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../constants/font";
@@ -19,6 +13,7 @@ const Button = ({
   size = "xlarge",
   shadow = false,
   onPressHandler = null,
+  rounded = false,
 }) => {
   const [onPress, setOnPress] = useState(false);
 
@@ -120,17 +115,9 @@ const Button = ({
     // Add border bottom shadow
     if (shadow) {
       switch (variant) {
+        case "black":
+        case "white":
         case "outline-primary": {
-          return {
-            borderBottomWidth: 4,
-          };
-        }
-        case "black": {
-          return {
-            borderBottomWidth: 4,
-          };
-        }
-        case "white": {
           return {
             borderBottomWidth: 4,
           };
@@ -150,18 +137,45 @@ const Button = ({
       }
     }
 
+    if (onPress) {
+      return {
+        opacity: 0.7,
+      };
+    }
+
+    return {};
+  };
+
+  const switchOnRounded = () => {
+    if (rounded) {
+      return {
+        borderRadius: BORDER_RADIUS[50],
+      };
+    }
+
     return {};
   };
 
   return (
-    <TouchableOpacity
-      onPress={onButtonPress}
-      onPressIn={onButtonPressIn}
-      onPressOut={onButtonPressOut}
-      style={[styles.button, switchOnVariant(), switchOnSize(), onShadow()]}
-    >
-      <Text style={[styles.text, switchOnTextColor()]}>{children}</Text>
-    </TouchableOpacity>
+    <View>
+      <Pressable
+        onPress={onButtonPress}
+        onPressIn={onButtonPressIn}
+        onPressOut={onButtonPressOut}
+      >
+        <View
+          style={[
+            styles.button,
+            switchOnVariant(),
+            switchOnSize(),
+            onShadow(),
+            switchOnRounded(),
+          ]}
+        >
+          <Text style={[styles.text, switchOnTextColor()]}>{children}</Text>
+        </View>
+      </Pressable>
+    </View>
   );
 };
 
@@ -175,6 +189,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
     letterSpacing: 0.2,
+    textAlign: "center",
   },
 });
 

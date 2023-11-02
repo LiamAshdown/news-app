@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    flex: 1,
   },
 });
 

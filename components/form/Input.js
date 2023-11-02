@@ -92,42 +92,44 @@ const Input = ({
   };
 
   return (
-    <View style={style}>
-      <View style={[styles.container, switchOnFocus(), switchOnDisable()]}>
-        {iconName && (
-          <Ionicons
-            name={iconName}
-            color={switchIconOnFocusAndIfNotEmptyOrDisableColor()}
-            style={styles.icon}
-            size={20}
+    <View style={[styles.container, style]}>
+      <View style={[styles.wrapper, switchOnFocus(), switchOnDisable()]}>
+        <View style={styles.textIcon}>
+          {iconName && (
+            <Ionicons
+              name={iconName}
+              color={switchIconOnFocusAndIfNotEmptyOrDisableColor()}
+              style={styles.icon}
+              size={20}
+            />
+          )}
+          <TextInput
+            placeholder="Lorem Ipsum"
+            placeholderTextColor={FORM_COLORS.input.placeholder}
+            onChangeText={onChangeText}
+            value={text}
+            onFocus={() => setOnFocus(true)}
+            onBlur={() => setOnFocus(false)}
+            multiline={multiline}
+            style={[
+              styles.input,
+              {
+                fontFamily: switchFontWeightIfNotEmpty(),
+              },
+              switchInputOnDisable(),
+              switchOnMultiLine(),
+            ]}
+            secureTextEntry={secureTextEntry && !showPassword}
+            editable={!disable}
           />
-        )}
-        <TextInput
-          placeholder="Lorem Ipsum"
-          placeholderTextColor={FORM_COLORS.input.placeholder}
-          onChangeText={onChangeText}
-          value={text}
-          onFocus={() => setOnFocus(true)}
-          onBlur={() => setOnFocus(false)}
-          multiline={multiline}
-          style={[
-            styles.input,
-            {
-              fontFamily: switchFontWeightIfNotEmpty(),
-            },
-            switchInputOnDisable(),
-            switchOnMultiLine(),
-          ]}
-          secureTextEntry={secureTextEntry && !showPassword}
-          editable={!disable}
-        />
+        </View>
         {secureTextEntry && (
           <Ionicons
             name={showPassword ? "eye-off" : "eye"}
             size={24}
             color={switchIconOnFocusAndIfNotEmptyOrDisableColor()}
             style={styles.icon}
-            onClick={() => setShowPassword(!showPassword)}
+            onPress={() => setShowPassword(!showPassword)}
           />
         )}
       </View>
@@ -140,8 +142,13 @@ const Input = ({
 
 const styles = StyleSheet.create({
   container: {
+    // Full width
+    width: "100%",
+  },
+  wrapper: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: BORDER_RADIUS[12],
     borderWidth: 1,
     paddingTop: PADDING[18],
@@ -152,18 +159,22 @@ const styles = StyleSheet.create({
     backgroundColor: SURFACE_LIGHT_DARK_LIGHT[3],
   },
   input: {
-    outlineStyle: "none",
+    borderStyle: "solid",
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
   },
   focus: {
-    outlineStyle: "solid",
-    outlineColor: FORM_COLORS.input.focus,
-    outlineWidth: 2,
+    borderStyle: "solid",
+    borderColor: FORM_COLORS.input.focus,
+    borderWidth: 2,
     backgroundColor: FORM_COLORS.input.focusBackground,
   },
   error: {
     borderColor: FORM_COLORS.input.error,
+  },
+  textIcon: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   icon: {
     marginRight: 12,

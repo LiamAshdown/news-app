@@ -102,16 +102,17 @@ const styles = StyleSheet.create({
     paddingRight: PADDING[8],
     borderColor: SURFACE_LIGHT_DARK_LIGHT[3],
     backgroundColor: SURFACE_LIGHT_DARK_LIGHT[3],
+    width: "100%",
   },
   input: {
-    borderStyle: "none",
+    borderWidth: 0,
     backgroundColor: "none",
     padding: 0,
   },
   focus: {
-    outlineStyle: "solid",
-    outlineColor: FORM_COLORS.input.focus,
-    outlineWidth: 2,
+    borderStyle: "solid",
+    borderColor: FORM_COLORS.input.focus,
+    borderWidth: 2,
     backgroundColor: FORM_COLORS.input.focusBackground,
   },
   disable: {

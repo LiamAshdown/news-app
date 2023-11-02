@@ -5,6 +5,13 @@ export const FONT_FAMILY_URBANIST = {
   semibold: "Urbanist-SemiBold",
 };
 
+export const FONT_FAMILY_PLAYFAIR = {
+  regular: "PlayfairDisplay-Regular",
+  medium: "PlayfairDisplay-Medium",
+  bold: "PlayfairDisplay-Bold",
+  semibold: "PlayfairDisplay-SemiBold",
+};
+
 export const FONT_WEIGHT = {
   regular: "400",
   medium: "500",

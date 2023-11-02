@@ -1,0 +1,53 @@
+import { Text, StyleSheet } from "react-native";
+
+import { FONT_FAMILY_PLAYFAIR } from "../../constants/font";
+import { HEADER_FONT_SIZES } from "../../constants/typography";
+
+const Header = ({ children, size }) => {
+  const onSwitchSize = () => {
+    switch (size) {
+      case "xlarge": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h1,
+        };
+      }
+      case "large": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h2,
+        };
+      }
+      case "medium": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h3,
+        };
+      }
+      case "small": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h4,
+        };
+      }
+      case "xsmall": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h5,
+        };
+      }
+      default: {
+        return {
+          fontSize: HEADER_FONT_SIZES.h1,
+        };
+      }
+    }
+  };
+
+  return <Text style={[styles.header, onSwitchSize()]}>{children}</Text>;
+};
+
+const styles = StyleSheet.create({
+  header: {
+    fontFamily: FONT_FAMILY_PLAYFAIR.semibold,
+    fontStyle: "normal",
+    color: "#000000",
+  },
+});
+
+export default Header;

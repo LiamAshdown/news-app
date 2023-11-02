@@ -3,6 +3,14 @@ export const SURFACE_LIGHT_DARK_LIGHT = {
 };
 
 export const WHITE = "#FFFFFF";
+export const COLOR_GREY_SCALE = {
+  300: "#E0E0E0",
+  700: "#616161",
+};
+
+export const THEME_COLORS = {
+  primary: "#1A998E",
+};
 
 export const ALERT_COLORS = {
   background: {
