@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
+    width: "100%",
   },
   focus: {
     borderStyle: "solid",

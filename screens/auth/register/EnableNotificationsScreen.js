@@ -1,15 +1,28 @@
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
 
+import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
-import Screen from "../../../components/auth/register/Screen";
 import Checkbox from "../../../components/form/Checkbox";
 import Input from "../../../components/form/Input";
 import ToggleSwitch from "../../../components/form/ToggleSwitch";
 import Text from "../../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { PADDING } from "../../../constants/padding";
+import { setRegisterProgress } from "../../../store/auth/reducer";
 
 const EnableNotificationsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setRegisterProgress(0.8));
+      return () => {};
+    }, [dispatch]),
+  );
+
   const onContinue = () => {
     navigation.navigate("AdditionalDetails");
   };

@@ -1,6 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Touchable, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Touchable,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 
 import { BORDER_GREY_COLOR, BUTTON_COLORS, WHITE } from "../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../constants/font";
@@ -17,6 +24,7 @@ const Button = ({
   rounded = false,
   block = false,
   iconName = "",
+  style,
 }) => {
   const [onPress, setOnPress] = useState(false);
 
@@ -140,12 +148,6 @@ const Button = ({
       }
     }
 
-    if (onPress) {
-      return {
-        opacity: 0.7,
-      };
-    }
-
     return {};
   };
 
@@ -182,8 +184,8 @@ const Button = ({
   };
 
   return (
-    <View style={[switchOnBlock()]}>
-      <Pressable
+    <View style={[switchOnBlock(), style]}>
+      <TouchableOpacity
         onPress={onButtonPress}
         onPressIn={onButtonPressIn}
         onPressOut={onButtonPressOut}
@@ -207,7 +209,7 @@ const Button = ({
           )}
           <Text style={[styles.text, switchOnTextColor()]}>{children}</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

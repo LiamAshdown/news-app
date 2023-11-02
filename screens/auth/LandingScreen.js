@@ -1,4 +1,5 @@
-import { View, SafeAreaView, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Button from "../../components/Button";
 import Logo from "../../components/svg/Logo";
@@ -8,6 +9,10 @@ import { THEME_COLORS } from "../../constants/colors";
 
 const LandingScreen = ({ navigation }) => {
   const signInWithPassword = () => {
+    navigation.navigate("SignIn");
+  };
+
+  const signUp = () => {
     navigation.navigate("Register");
   };
 
@@ -49,7 +54,7 @@ const LandingScreen = ({ navigation }) => {
           </View>
           <View style={styles.dontHaveAccount}>
             <Text>Don't have an account?</Text>
-            <Text color={styles.signUp.color} bold>
+            <Text color={styles.signUp.color} bold onPressHandler={signUp}>
               Sign Up
             </Text>
           </View>

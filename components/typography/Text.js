@@ -1,7 +1,10 @@
-import { View, Text as NativeText, StyleSheet } from "react-native";
+import { TouchableOpacity, Text as NativeText, StyleSheet } from "react-native";
 
 import { COLOR_GREY_SCALE } from "../../constants/colors";
-import { FONT_FAMILY_URBANIST } from "../../constants/font";
+import {
+  FONT_FAMILY_PLAYFAIR,
+  FONT_FAMILY_URBANIST,
+} from "../../constants/font";
 import { BODY_FONT_SIZES } from "../../constants/typography";
 
 const Text = ({
@@ -10,6 +13,7 @@ const Text = ({
   color = "black",
   bold = false,
   style = {},
+  onPressHandler = null,
 }) => {
   const switchOnSize = () => {
     switch (size) {
@@ -53,6 +57,12 @@ const Text = ({
 
   const switchOnBold = () => {
     if (bold) {
+      if (style.fontFamily === FONT_FAMILY_PLAYFAIR.regular) {
+        return {
+          fontFamily: FONT_FAMILY_PLAYFAIR.bold,
+        };
+      }
+
       return {
         fontFamily: FONT_FAMILY_URBANIST.semibold,
       };
@@ -61,8 +71,18 @@ const Text = ({
     return {};
   };
 
+  const Wrapper = ({ children }) => {
+    if (onPressHandler) {
+      return (
+        <TouchableOpacity onPress={onPressHandler}>{children}</TouchableOpacity>
+      );
+    }
+
+    return children;
+  };
+
   return (
-    <View>
+    <Wrapper>
       <NativeText
         style={[
           styles.text,
@@ -74,7 +94,7 @@ const Text = ({
       >
         {children}
       </NativeText>
-    </View>
+    </Wrapper>
   );
 };
 

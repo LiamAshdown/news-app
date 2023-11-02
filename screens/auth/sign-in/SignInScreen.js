@@ -8,21 +8,21 @@ import Text from "../../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { PADDING } from "../../../constants/padding";
 
-const CreateAccountScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation }) => {
   const onContinue = () => {
     navigation.navigate("WhereDoYouComeFrom");
   };
 
-  const onSignIn = () => {
-    navigation.navigate("SignIn");
+  const onSigUp = () => {
+    navigation.navigate("Register");
   };
 
   return (
-    <Screen continueText="Create Account" onContinueHandler={onContinue}>
+    <Screen continueText="Sign In" onContinueHandler={onContinue}>
       <View>
         <HeaderTitle
-          title="Create Account 👩‍💻"
-          description="Join our community and personalize your news experience."
+          title="Welcome back 👋"
+          description="Please enter your email & password to sign in."
         />
         <View style={{ marginTop: PADDING[24] }}>
           <Input placeholder="Email" iconName="mail" label="Email" />
@@ -33,17 +33,26 @@ const CreateAccountScreen = ({ navigation }) => {
             secureTextEntry
             style={{ marginTop: PADDING[16] }}
           />
-          <Checkbox
-            text="I agree to the Terms and Conditions"
-            style={{
-              marginTop: PADDING[16],
-            }}
-          />
+          <View style={styles.forgotPasswordRememberMe}>
+            <Checkbox
+              text="Remember Me?"
+              style={{
+                marginTop: PADDING[16],
+              }}
+            />
+            <Text
+              style={styles.forgotPassword}
+              bold
+              color={THEME_COLORS.primary}
+            >
+              Forgot Password?
+            </Text>
+          </View>
         </View>
         <View style={styles.alreadyHaveAccount}>
-          <Text>Already have an account?</Text>
-          <Text color={styles.signIn.color} bold onPressHandler={onSignIn}>
-            Sign In
+          <Text>Don't have an account?</Text>
+          <Text color={styles.signIn.color} bold onPressHandler={onSigUp}>
+            Sign Up
           </Text>
         </View>
       </View>
@@ -66,6 +75,15 @@ const styles = StyleSheet.create({
   signIn: {
     color: THEME_COLORS.primary,
   },
+  forgotPasswordRememberMe: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  forgotPassword: {
+    marginTop: PADDING[16],
+  },
 });
 
-export default CreateAccountScreen;
+export default SignInScreen;

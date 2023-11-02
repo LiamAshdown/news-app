@@ -1,8 +1,8 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 
-import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
-import { PADDING } from "../../../constants/padding";
-import Button from "../../Button";
+import { COLOR_GREY_SCALE, THEME_COLORS } from "../../constants/colors";
+import { PADDING } from "../../constants/padding";
+import Button from "../Button";
 
 const Screen = ({ children, continueText = "", onContinueHandler = null }) => {
   return (

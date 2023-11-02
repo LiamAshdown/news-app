@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 import Button from "../../../components/Button";
+import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
-import Screen from "../../../components/auth/register/Screen";
 import Checkbox from "../../../components/form/Checkbox";
 import Input from "../../../components/form/Input";
 import Text from "../../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { PADDING } from "../../../constants/padding";
+import { setRegisterProgress } from "../../../store/auth/reducer";
 
 const publishers = [
   {
@@ -35,6 +38,15 @@ const publishers = [
 
 const FollowPublishersScreen = ({ navigation }) => {
   const [selectedPublishers, setSelectedPublishers] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setRegisterProgress(0.6));
+      return () => {};
+    }, [dispatch]),
+  );
 
   const onContinue = () => {
     navigation.navigate("EnableNotifications");

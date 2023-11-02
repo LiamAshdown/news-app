@@ -7,6 +7,7 @@ export const SURFACE_LIGHT_DARK_LIGHT = {
 export const WHITE = "#FFFFFF";
 export const COLOR_GREY_SCALE = {
   300: "#E0E0E0",
+  500: "#9E9E9E",
   700: "#616161",
 };
 

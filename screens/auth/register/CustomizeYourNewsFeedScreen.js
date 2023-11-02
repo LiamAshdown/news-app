@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 
+import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
-import Screen from "../../../components/auth/register/Screen";
 import Text from "../../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { BORDER_RADIUS, PADDING } from "../../../constants/padding";
+import { setRegisterProgress } from "../../../store/auth/reducer";
 
 const interests = [
   {
@@ -48,6 +51,15 @@ const interests = [
 
 const CustomizeYourNewsFeedScreen = ({ navigation }) => {
   const [selectedInterests, setSelectedInterests] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setRegisterProgress(0.4));
+      return () => {};
+    }, [dispatch]),
+  );
 
   const onContinue = () => {
     navigation.navigate("FollowPublishers");

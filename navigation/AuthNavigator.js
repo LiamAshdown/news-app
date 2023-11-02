@@ -1,7 +1,7 @@
 import { HeaderBackButton } from "@react-navigation/elements";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import { View } from "react-native";
+import { useSelector } from "react-redux";
 
 import { SURFACE_LIGHT_DARK_LIGHT, THEME_COLORS } from "../constants/colors";
 import LandingScreen from "../screens/auth/LandingScreen";
@@ -10,41 +10,33 @@ import CreateAccountScreen from "../screens/auth/register/CreateAccountScreen";
 import CustomizeYourNewsFeedScreen from "../screens/auth/register/CustomizeYourNewsFeedScreen";
 import EnableNotificationsScreen from "../screens/auth/register/EnableNotificationsScreen";
 import FollowPublishersScreen from "../screens/auth/register/FollowPublishersScreen";
+import SuccessScreen from "../screens/auth/register/SuccessScreen";
 import WhereDoYouComeFromScreen from "../screens/auth/register/WhereDoYouComeFromScreen";
+import SignInScreen from "../screens/auth/sign-in/SignInScreen";
+import { selectRegisterProgress } from "../store/auth/reducer";
 
 const Stack = createStackNavigator();
 
-const CustomProgressBar = ({ progress }) => {
-  const animation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: progress,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  }, [progress]);
-
-  const width = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0%", "100%"],
-  });
+const CustomProgressBar = () => {
+  const progress = useSelector(selectRegisterProgress);
 
   return (
     <View
       style={{
         flexDirection: "row",
         height: 20,
-        width: "100%",
+        width: 200,
+        marginLeft: 25,
         backgroundColor: SURFACE_LIGHT_DARK_LIGHT[7],
-        borderRadius: "50%",
+        borderRadius: 50,
+        transform: [{ translateX: -20 }],
       }}
     >
-      <Animated.View
+      <View
         style={{
-          flex: width,
+          flex: progress,
           backgroundColor: THEME_COLORS.primary,
-          borderRadius: "50%",
+          borderRadius: 50,
         }}
       />
     </View>
@@ -77,13 +69,12 @@ const AuthNavigator = () => {
         })}
       >
         <Stack.Screen name="Register" component={CreateAccountScreen} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Group
           screenOptions={({ navigation }) => ({
             headerShown: true,
             headerTitle: "",
             headerLeft: (props) => {
-              console.log(navigation.getCurrentOptions());
-
               return (
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <HeaderBackButton
@@ -91,7 +82,7 @@ const AuthNavigator = () => {
                     onPress={() => navigation.goBack()}
                   />
 
-                  <CustomProgressBar progress={0.5} />
+                  <CustomProgressBar />
                 </View>
               );
             },
@@ -100,6 +91,7 @@ const AuthNavigator = () => {
               elevation: 0,
               backgroundColor: THEME_COLORS.white,
             },
+            animationEnabled: false,
             headerTintColor: THEME_COLORS.black,
             headerLeftLabelVisible: false,
           })}
@@ -124,6 +116,9 @@ const AuthNavigator = () => {
             name="AdditionalDetails"
             component={AdditionalDetailsScreen}
           />
+        </Stack.Group>
+        <Stack.Group>
+          <Stack.Screen name="Success" component={SuccessScreen} />
         </Stack.Group>
       </Stack.Group>
     </Stack.Navigator>

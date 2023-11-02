@@ -1,16 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ViewBase,
-  ScrollView,
-} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useLayoutEffect, useState } from "react";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 
+import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
-import Screen from "../../../components/auth/register/Screen";
 import Input from "../../../components/form/Input";
 import Australia from "../../../components/svg/countries/Australia";
 import Belgium from "../../../components/svg/countries/Belgium";
@@ -26,6 +21,7 @@ import {
   THEME_COLORS,
 } from "../../../constants/colors";
 import { BORDER_RADIUS, PADDING } from "../../../constants/padding";
+import { setRegisterProgress } from "../../../store/auth/reducer";
 
 const countries = [
   {
@@ -62,7 +58,14 @@ const WhereDoYouComeFromScreen = ({ navigation }) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [countryInput, setCountryInput] = useState("");
 
-  console.log(countryInput);
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setRegisterProgress(0.2));
+      return () => {};
+    }, [dispatch]),
+  );
 
   const filterByCountryInput = (item) => {
     if (countryInput.length > 0) {
