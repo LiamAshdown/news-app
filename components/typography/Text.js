@@ -15,6 +15,7 @@ const Text = ({
   style = {},
   onPressHandler = null,
 }) => {
+  console.log(style);
   const switchOnSize = () => {
     switch (size) {
       case "xlarge": {
@@ -49,6 +50,14 @@ const Text = ({
     if (color) {
       return {
         color,
+      };
+    }
+
+    console.log(style.color);
+
+    if (style && style.color) {
+      return {
+        color: style.color,
       };
     }
 

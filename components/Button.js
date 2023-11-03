@@ -9,7 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { BORDER_GREY_COLOR, BUTTON_COLORS, WHITE } from "../constants/colors";
+import {
+  BORDER_GREY_COLOR,
+  BUTTON_COLORS,
+  SURFACE_LIGHT_DARK_LIGHT,
+  WHITE,
+} from "../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../constants/font";
 import { BORDER_RADIUS, PADDING } from "../constants/padding";
 import { BODY_FONT_SIZES } from "../constants/typography";
@@ -42,12 +47,48 @@ const Button = ({
     setOnPress(false);
   };
 
+  const switchOnTextSize = () => {
+    switch (size) {
+      case "xsmall": {
+        return {
+          fontSize: BODY_FONT_SIZES.xsmall,
+        };
+      }
+      case "small": {
+        return {
+          fontSize: BODY_FONT_SIZES.small,
+        };
+      }
+      case "medium": {
+        return {
+          fontSize: BODY_FONT_SIZES.medium,
+        };
+      }
+      case "large": {
+        return {
+          fontSize: BODY_FONT_SIZES.large,
+        };
+      }
+      default: {
+        return {
+          fontSize: BODY_FONT_SIZES.xlarge,
+        };
+      }
+    }
+  };
+
   const switchOnVariant = () => {
     switch (variant) {
       case "outline-primary": {
         return {
           backgroundColor: BUTTON_COLORS.white,
           borderColor: BUTTON_COLORS.primary,
+        };
+      }
+      case "outline-white": {
+        return {
+          backgroundColor: BUTTON_COLORS.white,
+          borderColor: SURFACE_LIGHT_DARK_LIGHT[8],
         };
       }
       case "black": {
@@ -84,6 +125,7 @@ const Button = ({
           color: BUTTON_COLORS.white,
         };
       }
+      case "outline-white":
       case "white": {
         return {
           color: BUTTON_COLORS.black,
@@ -99,6 +141,11 @@ const Button = ({
 
   const switchOnSize = () => {
     switch (size) {
+      case "xsmall": {
+        return {
+          padding: PADDING[8],
+        };
+      }
       case "small": {
         return {
           padding: PADDING[12],
@@ -207,7 +254,9 @@ const Button = ({
               size={20}
             />
           )}
-          <Text style={[styles.text, switchOnTextColor()]}>{children}</Text>
+          <Text style={[styles.text, switchOnTextColor(), switchOnTextSize()]}>
+            {children}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>

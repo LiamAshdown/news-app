@@ -16,9 +16,7 @@ const List = () => {
 };
 
 const styles = StyleSheet.create({
-  contentContainerStyle: {
-    padding: PADDING[16],
-  },
+  contentContainerStyle: {},
 });
 
 export default List;

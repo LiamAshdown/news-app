@@ -22,9 +22,7 @@ const HorizontalTags = ({ style }) => {
 };
 
 const styles = StyleSheet.create({
-  recentStoriesContainer: {
-    paddingHorizontal: 16,
-  },
+  recentStoriesContainer: {},
 });
 
 export default HorizontalTags;

@@ -1,9 +1,9 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import { FONT_FAMILY_PLAYFAIR } from "../../constants/font";
 import { HEADER_FONT_SIZES } from "../../constants/typography";
 
-const Header = ({ children, size, style }) => {
+const Header = ({ children, size, style, onPressHandler }) => {
   const onSwitchSize = () => {
     switch (size) {
       case "xlarge": {
@@ -31,6 +31,11 @@ const Header = ({ children, size, style }) => {
           fontSize: HEADER_FONT_SIZES.h5,
         };
       }
+      case "xxsmall": {
+        return {
+          fontSize: HEADER_FONT_SIZES.h6,
+        };
+      }
       default: {
         return {
           fontSize: HEADER_FONT_SIZES.h1,
@@ -39,7 +44,21 @@ const Header = ({ children, size, style }) => {
     }
   };
 
-  return <Text style={[styles.header, style, onSwitchSize()]}>{children}</Text>;
+  const Wrapper = ({ children }) => {
+    if (onPressHandler) {
+      return (
+        <TouchableOpacity onPress={onPressHandler}>{children}</TouchableOpacity>
+      );
+    }
+
+    return children;
+  };
+
+  return (
+    <Wrapper>
+      <Text style={[styles.header, style, onSwitchSize()]}>{children}</Text>
+    </Wrapper>
+  );
 };
 
 const styles = StyleSheet.create({

@@ -1,14 +1,18 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { SURFACE_LIGHT_DARK_LIGHT, THEME_COLORS } from "../../constants/colors";
 import { PADDING } from "../../constants/padding";
 
-const HomeNotificaton = () => {
+const HomeNotificaton = ({ navigation }) => {
+  const onNavigate = () => {
+    navigation.navigate("Notification");
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onNavigate}>
       <Ionicons name="notifications-outline" size={32} color="black" />
-    </View>
+    </TouchableOpacity>
   );
 };
 

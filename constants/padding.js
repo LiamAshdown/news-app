@@ -6,6 +6,7 @@ export const BORDER_RADIUS = {
 
 export const PADDING = {
   4: 4,
+  6: 6,
   8: 8,
   12: 12,
   14: 14,
@@ -16,3 +17,5 @@ export const PADDING = {
   32: 32,
   48: 48,
 };
+
+export const CONTAINER_PADDING = PADDING[24];
