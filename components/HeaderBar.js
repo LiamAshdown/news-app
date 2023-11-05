@@ -1,20 +1,26 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 
-import { THEME_COLORS } from "../../constants/colors";
-import { FONT_FAMILY_URBANIST } from "../../constants/font";
-import Header from "../typography/Header";
-import Text from "../typography/Text";
+import Header from "./typography/Header";
+import Text from "./typography/Text";
+import { THEME_COLORS } from "../constants/colors";
+import { FONT_FAMILY_URBANIST } from "../constants/font";
 
-const TotalCommentsBar = ({ totalComments }) => {
+const HeaderBar = ({ title, navigation, goTo }) => {
+  const onPressHeader = () => {
+    if (navigation) {
+      navigation.navigate(goTo);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
         <Header size="xsmall" style={styles.header}>
-          {totalComments}K comments
+          {title}
         </Header>
       </View>
-      <TouchableOpacity style={styles.viewAllContainer}>
+      <TouchableOpacity style={styles.viewAllContainer} onPress={onPressHeader}>
         <Text size="medium" style={styles.viewAllText}>
           View All
         </Text>
@@ -47,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TotalCommentsBar;
+export default HeaderBar;

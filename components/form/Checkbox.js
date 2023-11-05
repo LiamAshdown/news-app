@@ -4,12 +4,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { THEME_COLORS } from "../../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../../constants/font";
 
-const Checkbox = ({ text = "", style = {} }) => {
+const Checkbox = ({ text = "", style = {}, textStyle = {} }) => {
   return (
     <BouncyCheckbox
       fillColor={THEME_COLORS.primary}
       iconStyle={styles.iconStyle}
-      textStyle={styles.textStyle}
+      textStyle={[styles.textStyle, textStyle]}
       text={text}
       style={style}
     />

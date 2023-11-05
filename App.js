@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
@@ -5,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 
@@ -40,29 +42,36 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <MenuProvider
-        customStyles={{
-          menuProviderWrapper: {
-            borderRadius: 8,
-            backgroundColor: "red",
-          },
-          backdrop: {
-            backgroundColor: "red",
-          },
-        }}
-      >
-        <View style={styles.container} onLayout={onLayoutRootView}>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Group screenOptions={{ headerShown: false }}>
-                {/* <Stack.Screen name="Onboarding" component={OnBoardingNavigator} />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>
+          <MenuProvider
+            customStyles={{
+              menuProviderWrapper: {
+                borderRadius: 8,
+                backgroundColor: "red",
+              },
+              backdrop: {
+                backgroundColor: "red",
+              },
+            }}
+          >
+            <View style={styles.container} onLayout={onLayoutRootView}>
+              <NavigationContainer>
+                <Stack.Navigator>
+                  <Stack.Group screenOptions={{ headerShown: false }}>
+                    {/* <Stack.Screen name="Onboarding" component={OnBoardingNavigator} />
               <Stack.Screen name="Auth" component={AuthNavigator} /> */}
-                <Stack.Screen name="LoggedIn" component={LoggedInNavigator} />
-              </Stack.Group>
-            </Stack.Navigator>
-          </NavigationContainer>
-        </View>
-      </MenuProvider>
+                    <Stack.Screen
+                      name="LoggedIn"
+                      component={LoggedInNavigator}
+                    />
+                  </Stack.Group>
+                </Stack.Navigator>
+              </NavigationContainer>
+            </View>
+          </MenuProvider>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </Provider>
   );
 }

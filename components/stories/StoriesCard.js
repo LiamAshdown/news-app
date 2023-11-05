@@ -16,6 +16,10 @@ const StoriesCard = () => {
     navigation.navigate("ViewPost");
   };
 
+  const viewAuthorPublisher = () => {
+    navigation.navigate("ViewAuthorPublisher");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -34,7 +38,9 @@ const StoriesCard = () => {
               source={require("../../assets/publishers/cnn.png")}
               style={styles.publisherImage}
             />
-            <Text size="medium">CNN News</Text>
+            <Text size="medium" onPressHandler={viewAuthorPublisher}>
+              CNN News
+            </Text>
           </View>
         </View>
       </View>
