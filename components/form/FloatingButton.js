@@ -4,13 +4,10 @@ import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 
 import { THEME_COLORS } from "../../constants/colors";
 
-const FloatingButton = () => {
+const FloatingButton = ({ onPressHandler }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={() => console.log("Floating button pressed")}
-      >
+      <TouchableOpacity style={styles.floatingButton} onPress={onPressHandler}>
         <Text style={styles.buttonText}>
           <Ionicons name="pencil" size={24} color="white" />
         </Text>

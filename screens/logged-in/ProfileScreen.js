@@ -8,7 +8,11 @@ import Text from "../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../constants/colors";
 import { CONTAINER_PADDING, PADDING } from "../../constants/padding";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
+  const onNewStory = () => {
+    navigation.navigate("CreatePost");
+  };
+
   return (
     <>
       <ScrollView
@@ -17,7 +21,7 @@ const ProfileScreen = () => {
       >
         <UserProfile isOwnProfile />
       </ScrollView>
-      <FloatingButton />
+      <FloatingButton onPressHandler={onNewStory} />
     </>
   );
 };

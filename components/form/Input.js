@@ -21,6 +21,7 @@ const Input = ({
   label = "",
   onChange = null,
   name = "",
+  helpText = "",
 }) => {
   const [text, onChangeText] = useState("");
   const [onFocus, setOnFocus] = useState(false);
@@ -52,10 +53,16 @@ const Input = ({
 
   const switchOnMultiLine = () => {
     // If there's an icon then fake padding top to center the text
-    if (multiline && iconName) {
-      return {
-        paddingTop: 20,
+    if (multiline) {
+      const multiLineStyle = {
+        height: 200,
       };
+
+      if (iconName) {
+        multiLineStyle.paddingTop = 20;
+      }
+
+      return multiLineStyle;
     }
 
     return {};
@@ -155,6 +162,11 @@ const Input = ({
           />
         )}
       </View>
+      {helpText && (
+        <Text style={styles.helpText} size="mediun">
+          {helpText}
+        </Text>
+      )}
       {feedback && (
         <Feedback variant={feedback.type}>{feedback.message}</Feedback>
       )}
@@ -208,6 +220,9 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 4,
+  },
+  helpText: {
+    color: FORM_COLORS.input.helpText,
   },
 });
 

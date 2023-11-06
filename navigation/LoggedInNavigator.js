@@ -7,6 +7,7 @@ import HomeHeader from "../components/navigations/Home";
 import HomeNotificaton from "../components/navigations/HomeNotification";
 import ViewPostHeader from "../components/navigations/ViewPostHeader";
 import Logo from "../components/svg/Logo";
+import Text from "../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../constants/font";
 import { PADDING } from "../constants/padding";
@@ -21,6 +22,7 @@ import RecentStoriesScreen from "../screens/logged-in/RecentStoriesScreen";
 import TrendingScreen from "../screens/logged-in/TrendingScreen";
 import ViewAuthorPublisherScreen from "../screens/logged-in/ViewAuthorPublisherScreen";
 import ViewPostScreen from "../screens/logged-in/ViewPostScreen";
+import CreatePostScreen from "../screens/logged-in/create-post/CreatePostScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -310,6 +312,43 @@ const LoggedInNavigator = () => (
           </View>
         ),
       }}
+    />
+    <Stack.Screen
+      name="CreatePost"
+      component={CreatePostScreen}
+      options={({ navigation }) => ({
+        headerTitle: "Write Stories",
+        headerStyle: {
+          shadowColor: "transparent",
+          elevation: 0,
+          backgroundColor: THEME_COLORS.white,
+          height: 125,
+        },
+        headerTitleStyle: {
+          fontFamily: FONT_FAMILY_URBANIST.bold,
+          fontSize: HEADER_FONT_SIZES.h6,
+        },
+        headerRight: () => {
+          const onPreview = () => {
+            navigation.navigate("ViewPost");
+          };
+
+          return (
+            <Text
+              style={{
+                marginRight: PADDING[12],
+              }}
+              color={THEME_COLORS.primary}
+              onPress={onPreview}
+              bold
+            >
+              Preview
+            </Text>
+          );
+        },
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+      })}
     />
   </Stack.Navigator>
 );

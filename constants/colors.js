@@ -7,6 +7,7 @@ export const SURFACE_LIGHT_DARK_LIGHT = {
 export const WHITE = "#FFFFFF";
 export const COLOR_GREY_SCALE = {
   300: "#E0E0E0",
+  400: "#BDBDBD",
   500: "#9E9E9E",
   700: "#616161",
 };
@@ -43,6 +44,7 @@ export const FORM_COLORS = {
     placeholder: "#9E9E9E",
     focus: "#1A998E",
     text: "#212121",
+    helpText: "#757575",
     focusBackground: "rgba(26, 153, 142, 0.08)",
     disable: "#D8D8D8",
     textDisable: "#757575",
