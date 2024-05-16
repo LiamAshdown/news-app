@@ -1,18 +1,18 @@
-import { Image, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
-const ViewPostImageTitle = () => {
+import { COLOR_GREY_SCALE, THEME_COLORS } from "../../constants/colors";
+import { BORDER_RADIUS, PADDING } from "../../constants/padding";
+import Header from "../typography/Header";
+
+const ViewPostImageTitle = ({ imageUrl, title }) => {
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Image
-          source={require("../../assets/view-post.png")}
-          style={styles.image}
-        />
+        <Image source={{ uri: imageUrl }} style={styles.image} />
       </View>
       <View>
         <Header size="small">
-          Unmasking the Truth: Investigative Report Exposes Widespread Political
-          Corruption
+          {title ? title : "Lorem ipsum dolor sit amet, consectetur"}
         </Header>
       </View>
     </View>
@@ -28,44 +28,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: "center",
     marginBottom: PADDING[12],
-  },
-  publisherContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: PADDING[8],
-    marginTop: PADDING[6],
-  },
-  circleDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "black",
-  },
-  publisherIcon: {
-    width: 20,
-    height: 20,
-  },
-  followingText: {
-    color: THEME_COLORS.primary,
-  },
-  textGray: {
-    color: COLOR_GREY_SCALE[500],
-  },
-  statsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: PADDING[8],
-  },
-  statsIconText: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: PADDING[4],
-  },
-  statsIconTextContainer: {
-    marginLeft: PADDING[14],
-    flexDirection: "row",
-    alignItems: "center",
-    gap: PADDING[12],
   },
 });
 

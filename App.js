@@ -1,21 +1,16 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MenuProvider } from "react-native-popup-menu";
+import { RootSiblingParent } from "react-native-root-siblings";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
-import AuthNavigator from "./navigation/AuthNavigator";
-import LoggedInNavigator from "./navigation/LoggedInNavigator";
-import OnBoardingNavigator from "./navigation/OnBoardingNavigator";
-import store from "./store/store";
-
-const Stack = createStackNavigator();
+import { Screen } from "./Screen";
+import { store, persistor } from "./store/store";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -42,36 +37,29 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <MenuProvider
-            customStyles={{
-              menuProviderWrapper: {
-                borderRadius: 8,
-                backgroundColor: "red",
-              },
-              backdrop: {
-                backgroundColor: "red",
-              },
-            }}
-          >
-            <View style={styles.container} onLayout={onLayoutRootView}>
-              <NavigationContainer>
-                <Stack.Navigator>
-                  <Stack.Group screenOptions={{ headerShown: false }}>
-                    {/* <Stack.Screen name="Onboarding" component={OnBoardingNavigator} />
-              <Stack.Screen name="Auth" component={AuthNavigator} /> */}
-                    <Stack.Screen
-                      name="LoggedIn"
-                      component={LoggedInNavigator}
-                    />
-                  </Stack.Group>
-                </Stack.Navigator>
-              </NavigationContainer>
-            </View>
-          </MenuProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+      <PersistGate loading={null} persistor={persistor}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <RootSiblingParent>
+            <BottomSheetModalProvider>
+              <MenuProvider
+                customStyles={{
+                  menuProviderWrapper: {
+                    borderRadius: 8,
+                    backgroundColor: "red",
+                  },
+                  backdrop: {
+                    backgroundColor: "red",
+                  },
+                }}
+              >
+                <View style={styles.container} onLayout={onLayoutRootView}>
+                  <Screen />
+                </View>
+              </MenuProvider>
+            </BottomSheetModalProvider>
+          </RootSiblingParent>
+        </GestureHandlerRootView>
+      </PersistGate>
     </Provider>
   );
 }

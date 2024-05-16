@@ -16,6 +16,7 @@ export const THEME_COLORS = {
   primary: "#1A998E",
   white: "#FFF",
   black: "#35383F",
+  red: "#F75555",
 };
 
 export const BORDER_GREY_COLOR = "#EEE";

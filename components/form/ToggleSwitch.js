@@ -1,12 +1,9 @@
-import React, { useState } from "react";
-import { Switch, StyleSheet } from "react-native";
+import React from "react";
+import { Switch } from "react-native";
 
 import { SURFACE_LIGHT_DARK_LIGHT, THEME_COLORS } from "../../constants/colors";
 
-const ToggleSwitch = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
+const ToggleSwitch = ({ onChange, value }) => {
   return (
     <Switch
       trackColor={{
@@ -14,8 +11,8 @@ const ToggleSwitch = () => {
         true: THEME_COLORS.primary,
       }}
       thumbColor={THEME_COLORS.white}
-      onValueChange={toggleSwitch}
-      value={isEnabled}
+      onValueChange={onChange}
+      value={value}
     />
   );
 };

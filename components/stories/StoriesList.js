@@ -3,17 +3,12 @@ import { StyleSheet, View } from "react-native";
 import StoriesCard from "./StoriesCard";
 import { PADDING } from "../../constants/padding";
 
-const StoriesList = () => {
+const StoriesList = ({ posts = [] }) => {
   return (
     <View style={styles.container}>
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
-      <StoriesCard />
+      {posts.map((post) => (
+        <StoriesCard key={post.id} post={post} />
+      ))}
     </View>
   );
 };

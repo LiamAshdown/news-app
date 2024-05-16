@@ -1,15 +1,11 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Formik } from "formik";
+import { useLayoutEffect, useRef } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 import Input from "../../../components/form/Input";
+import PostUploadCoverImage from "../../../components/post/PostUploadCoverImage";
 import Text from "../../../components/typography/Text";
 import {
   BORDER_GREY_COLOR,
@@ -17,79 +13,140 @@ import {
   SURFACE_LIGHT_DARK_LIGHT,
   THEME_COLORS,
 } from "../../../constants/colors";
-import { CONTAINER_PADDING } from "../../../constants/padding";
+import { CONTAINER_PADDING, PADDING } from "../../../constants/padding";
+import { createPostSchema } from "../../../lib/validation";
+import { setPost } from "../../../store/post/reducer";
 
-const CreatePostScreen = () => {
-  const [image, setImage] = useState(null);
+const CreatePostScreen = ({ navigation }) => {
+  const formikRef = useRef();
+  const dispatch = useDispatch();
+
+  const Header = ({ handleSubmit, navigation }) => {
+    useLayoutEffect(() => {
+      navigation.setOptions({
+        headerRight: () => {
+          return (
+            <Text
+              style={{
+                marginRight: PADDING[12],
+              }}
+              color={THEME_COLORS.primary}
+              onPressHandler={handleSubmit}
+              bold
+            >
+              Preview
+            </Text>
+          );
+        },
+      });
+    }, [navigation, handleSubmit]);
+
+    return <></>;
+  };
 
   const Gapper = () => {
     return <View style={{ height: 20 }} />;
   };
 
+  const onContinue = async (data) => {
+    dispatch(setPost(data));
+
+    navigation.navigate("TagPost");
+  };
+
   const onUploadImage = async () => {
     // No permissions request is necessary for launching the image library
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      console.log(result.assets[0].uri);
-      setImage(result.assets[0].uri);
+      const image = result.assets[0];
+
+      const localUri = image.uri;
+      const filename = localUri.split("/").pop();
+
+      // Infer the type of the image
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+
+      console.log(image);
+
+      formikRef.current.setFieldValue("image", {
+        uri: localUri,
+        name: filename,
+        type,
+      });
     }
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.uploadContainer}
-          onPress={onUploadImage}
-        >
-          {!image && (
-            <>
-              <Ionicons
-                name="image-outline"
-                size={40}
-                color={COLOR_GREY_SCALE[400]}
+    <Formik
+      initialValues={{
+        title: "",
+        content: "",
+        image: null,
+      }}
+      validationSchema={createPostSchema}
+      onSubmit={(values) => {
+        onContinue(values);
+      }}
+      innerRef={formikRef}
+    >
+      {({ handleChange, errors, handleSubmit, touched, values }) => (
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.container}>
+            <PostUploadCoverImage
+              onUploadImage={onUploadImage}
+              image={values.image?.uri}
+              feedback={
+                touched.image &&
+                errors.image && {
+                  type: "error",
+                  message: errors.image,
+                }
+              }
+            />
+            <Gapper />
+            <View>
+              <Input
+                placeholder="Your Title"
+                label="Title"
+                value={values.title}
+                onChange={handleChange("title")}
+                feedback={
+                  touched.title &&
+                  errors.title && {
+                    type: "error",
+                    message: errors.title,
+                  }
+                }
               />
-              <Text style={styles.uploadText}>Add cover image</Text>
-            </>
-          )}
-          {image && (
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: image }}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="cover"
+              <Gapper />
+              <Input
+                placeholder="Write your story here..."
+                label="Story"
+                value={values.content}
+                onChange={handleChange("content")}
+                feedback={
+                  touched.content &&
+                  errors.content && {
+                    type: "error",
+                    message: errors.content,
+                  }
+                }
+                helpText="TODO: Implement rich text editor via web view"
+                multiline
               />
-              <View style={styles.imageIcon}>
-                <Ionicons
-                  name="close-circle"
-                  size={40}
-                  color={THEME_COLORS.primary}
-                />
-              </View>
             </View>
-          )}
-        </TouchableOpacity>
-        <Gapper />
-        <View>
-          <Input placeholder="Your Title" label="Title" />
-          <Gapper />
-          <Input
-            placeholder="Write your story here..."
-            label="Story"
-            helpText="TODO: Implement rich text editor via web view"
-            multiline
-          />
-        </View>
-      </View>
-    </ScrollView>
+          </View>
+          <Header handleSubmit={handleSubmit} navigation={navigation} />
+        </ScrollView>
+      )}
+    </Formik>
   );
 };
 

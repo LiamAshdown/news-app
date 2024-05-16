@@ -8,6 +8,12 @@ import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { PADDING } from "../../../constants/padding";
 
 const SuccessScreen = ({ navigation }) => {
+  const onContinue = () => {
+    navigation.navigate("LoggedIn", {
+      screen: "HomeScreen",
+    });
+  };
+
   return (
     <View style={{ backgroundColor: THEME_COLORS.white, flexGrow: 1 }}>
       <View style={styles.container}>
@@ -22,7 +28,7 @@ const SuccessScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.continueButton}>
-        <Button rounded size="medium">
+        <Button rounded size="medium" onPressHandler={onContinue}>
           Let's Go
         </Button>
       </View>

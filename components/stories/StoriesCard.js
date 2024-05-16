@@ -9,7 +9,7 @@ import Menu from "../context-menu/Menu";
 import Header from "../typography/Header";
 import Text from "../typography/Text";
 
-const StoriesCard = () => {
+const StoriesCard = ({ post }) => {
   const navigation = useNavigation();
 
   const onViewPost = () => {
@@ -24,13 +24,17 @@ const StoriesCard = () => {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <TouchableOpacity onPress={onViewPost}>
-          <Image source={require("../../assets/stories.png")} />
+          <Image
+            style={styles.coverImage}
+            source={{
+              uri: post.coverImageUrl,
+            }}
+          />
         </TouchableOpacity>
         <View style={styles.infoContainer}>
           <TouchableOpacity onPress={onViewPost}>
             <Header size="xxsmall" style={styles.title}>
-              Revolutionizing the Future: Breakthrough Technology Set to
-              Transform Industries
+              {post.title}
             </Header>
           </TouchableOpacity>
           <View style={styles.publisherContainer}>
@@ -39,7 +43,7 @@ const StoriesCard = () => {
               style={styles.publisherImage}
             />
             <Text size="medium" onPressHandler={viewAuthorPublisher}>
-              CNN News
+              {post.user.username}
             </Text>
           </View>
         </View>
@@ -139,6 +143,10 @@ const styles = StyleSheet.create({
   },
   statsText: {
     color: COLOR_GREY_SCALE[500],
+  },
+  coverImage: {
+    width: 120,
+    height: 101,
   },
 });
 

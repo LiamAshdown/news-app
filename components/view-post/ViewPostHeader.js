@@ -1,26 +1,15 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image, StyleSheet, View } from "react-native";
 
+import ViewPostImageTitle from "./ViewPostImageTitle";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../constants/colors";
 import { BORDER_RADIUS, PADDING } from "../../constants/padding";
-import Header from "../typography/Header";
 import Text from "../typography/Text";
 
 const ViewPostHeader = () => {
   return (
     <View>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../assets/view-post.png")}
-          style={styles.image}
-        />
-      </View>
-      <View>
-        <Header size="small">
-          Unmasking the Truth: Investigative Report Exposes Widespread Political
-          Corruption
-        </Header>
-      </View>
+      <ViewPostImageTitle />
       <View style={styles.publisherContainer}>
         <Image
           source={require("../../assets/publishers/cnn.png")}

@@ -1,73 +1,69 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
+import Toast from "react-native-root-toast";
+import { useDispatch, useSelector } from "react-redux";
 
+import api from "../../../api";
 import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
+import NewsFeedTypesSkeleton from "../../../components/skeletons/NewsFeedTypesSkeleton";
 import Text from "../../../components/typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
 import { BORDER_RADIUS, PADDING } from "../../../constants/padding";
-import { setRegisterProgress } from "../../../store/auth/reducer";
-
-const interests = [
-  {
-    name: "Politics",
-    icon: "🚀",
-  },
-  {
-    name: "Business",
-    icon: "📈",
-  },
-  {
-    name: "Technology",
-    icon: "👩‍💻",
-  },
-  {
-    name: "Entertainment",
-    icon: "🎬",
-  },
-  {
-    name: "Sports",
-    icon: "⚽️",
-  },
-  {
-    name: "Science",
-    icon: "🧬",
-  },
-  {
-    name: "Health",
-    icon: "🏥",
-  },
-  {
-    name: "Fashion",
-    icon: "👗",
-  },
-  {
-    name: "Travel",
-    icon: "🧳",
-  },
-];
+import { onboardingStepThree } from "../../../store/auth/actions";
+import { selectUser, setRegisterProgress } from "../../../store/auth/reducer";
+import { getNewsFeedTypes } from "../../../store/misc/actions";
+import {
+  selectLoading as selectNewsFeedTypesLoading,
+  selectNewsFeedTypes,
+} from "../../../store/misc/reducer";
 
 const CustomizeYourNewsFeedScreen = ({ navigation }) => {
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const newsFeedTypes = useSelector(selectNewsFeedTypes);
+  const newsFeedTypesLoading = useSelector(selectNewsFeedTypesLoading);
+  const currentUser = useSelector(selectUser);
 
   const dispatch = useDispatch();
 
   useFocusEffect(
     useCallback(() => {
       dispatch(setRegisterProgress(0.4));
+
+      dispatch(getNewsFeedTypes());
       return () => {};
     }, [dispatch]),
   );
 
+  useEffect(() => {
+    if (currentUser) {
+      setSelectedInterests(currentUser.newsFeedTypes);
+    }
+  }, [currentUser]);
+
   const onContinue = () => {
-    navigation.navigate("FollowPublishers");
+    if (selectedInterests.length === 0) {
+      Toast.show("Please select at least one interest", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+
+      return;
+    }
+
+    const newsFeedTypeIds = selectedInterests.map((interest) => interest.id);
+
+    dispatch(onboardingStepThree({ newsFeedTypeIds })).then((response) => {
+      if (response.meta.requestStatus === "fulfilled") {
+        navigation.navigate("FollowPublishers");
+      }
+    });
   };
 
-  const InterestItem = ({ name, icon }) => {
+  const InterestItem = ({ interest }) => {
     const onSwitchSelectedInterest = () => {
-      if (selectedInterests.includes(name)) {
+      if (selectedInterests.some((item) => item.name === interest.name)) {
         return {
           borderColor: THEME_COLORS.primary,
         };
@@ -78,24 +74,26 @@ const CustomizeYourNewsFeedScreen = ({ navigation }) => {
       };
     };
 
+    const onFollowInterest = () => {
+      if (selectedInterests.some((item) => item.name === interest.name)) {
+        setSelectedInterests(
+          selectedInterests.filter((item) => item.name !== interest.name),
+        );
+      } else {
+        setSelectedInterests([...selectedInterests, interest]);
+      }
+    };
+
     return (
       <TouchableOpacity
         style={[styles.interestItem, onSwitchSelectedInterest()]}
-        onPress={() => {
-          if (selectedInterests.includes(name)) {
-            setSelectedInterests(
-              selectedInterests.filter((interest) => interest !== name),
-            );
-          } else {
-            setSelectedInterests([...selectedInterests, name]);
-          }
-        }}
+        onPress={onFollowInterest}
       >
         <View>
-          <Text style={styles.iconSize}>{icon}</Text>
+          <Text style={styles.iconSize}>{interest.icon}</Text>
         </View>
         <View>
-          <Text size="medium">{name}</Text>
+          <Text size="medium">{interest.name}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -108,17 +106,16 @@ const CustomizeYourNewsFeedScreen = ({ navigation }) => {
           title="Customize your news   feed 🌟"
           description="Tell us what you're interested in to tailor your news experience. Don't worry, you can always update your preferences later."
         />
-        <View style={{ marginTop: PADDING[24] }}>
-          <View style={styles.interestContainer}>
-            {interests.map((interest) => (
-              <InterestItem
-                key={interest.name}
-                name={interest.name}
-                icon={interest.icon}
-              />
-            ))}
+        <NewsFeedTypesSkeleton loading={newsFeedTypesLoading} />
+        {!newsFeedTypesLoading && (
+          <View style={{ marginTop: PADDING[24] }}>
+            <View style={styles.interestContainer}>
+              {newsFeedTypes.map((interest) => (
+                <InterestItem key={interest.id} interest={interest} />
+              ))}
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </Screen>
   );

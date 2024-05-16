@@ -1,73 +1,74 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import api from "../../../api";
 import Button from "../../../components/Button";
 import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
-import Checkbox from "../../../components/form/Checkbox";
-import Input from "../../../components/form/Input";
+import PublisherSkeleton from "../../../components/skeletons/PublisherSkeleton";
 import Text from "../../../components/typography/Text";
-import { COLOR_GREY_SCALE, THEME_COLORS } from "../../../constants/colors";
+import { COLOR_GREY_SCALE } from "../../../constants/colors";
 import { PADDING } from "../../../constants/padding";
-import { setRegisterProgress } from "../../../store/auth/reducer";
-
-const publishers = [
-  {
-    name: "New York Times",
-    imageSrc: require("../../../assets/publishers/new-york-times.png"),
-  },
-  {
-    name: "BBC News",
-    imageSrc: require("../../../assets/publishers/bbc.png"),
-  },
-  {
-    name: "NBC News",
-    imageSrc: require("../../../assets/publishers/nbc-news.png"),
-  },
-  {
-    name: "USA Today",
-    imageSrc: require("../../../assets/publishers/usa-today.png"),
-  },
-  {
-    name: "CNN News",
-    imageSrc: require("../../../assets/publishers/cnn.png"),
-  },
-];
+import { onboardingStepFour } from "../../../store/auth/actions";
+import { selectUser, setRegisterProgress } from "../../../store/auth/reducer";
+import { getPublishers } from "../../../store/misc/actions";
+import {
+  selectLoading as publisherSelectLoading,
+  selectPublishers,
+} from "../../../store/misc/reducer";
 
 const FollowPublishersScreen = ({ navigation }) => {
   const [selectedPublishers, setSelectedPublishers] = useState([]);
+  const publisherLoading = useSelector(publisherSelectLoading);
+  const publishers = useSelector(selectPublishers);
+  const currentUser = useSelector(selectUser);
 
   const dispatch = useDispatch();
 
   useFocusEffect(
     useCallback(() => {
       dispatch(setRegisterProgress(0.6));
+
+      dispatch(getPublishers());
       return () => {};
     }, [dispatch]),
   );
 
+  useEffect(() => {
+    if (currentUser) {
+      setSelectedPublishers(currentUser.publisherFollows);
+    }
+  }, [currentUser]);
+
   const onContinue = () => {
-    navigation.navigate("EnableNotifications");
+    const publisherIds = selectedPublishers.map((publisher) => publisher.id);
+    dispatch(onboardingStepFour({ publisherIds })).then((response) => {
+      if (response.meta.requestStatus === "fulfilled") {
+        navigation.navigate("EnableNotifications");
+      }
+    });
   };
 
-  const PublisherItem = ({ imageSrc, text }) => {
+  const PublisherItem = ({ publisher, imageSrc }) => {
     const onFollowPublisher = () => {
-      if (selectedPublishers.includes(text)) {
-        setSelectedPublishers((prevSelectedPublishers) =>
-          prevSelectedPublishers.filter((publisher) => publisher !== text),
+      if (selectedPublishers.some((item) => item.name === publisher.name)) {
+        setSelectedPublishers(
+          selectedPublishers.filter((item) => item.name !== publisher.name),
         );
       } else {
-        setSelectedPublishers((prevSelectedPublishers) => [
-          ...prevSelectedPublishers,
-          text,
-        ]);
+        setSelectedPublishers([...selectedPublishers, publisher]);
       }
     };
 
-    const publisherIsSelected = selectedPublishers.includes(text);
-    const isLastChild = text === publishers[publishers.length - 1].name;
+    const publisherIsSelected = selectedPublishers.some(
+      (item) => item.name === publisher.name,
+    );
+
+    // const publisherIsSelected = selectedPublishers.
+    const isLastChild =
+      publisher.name === publishers[publishers.length - 1].name;
 
     return (
       <View
@@ -81,7 +82,7 @@ const FollowPublishersScreen = ({ navigation }) => {
             <Image source={imageSrc} />
           </View>
           <View>
-            <Text bold>{text}</Text>
+            <Text bold>{publisher.name}</Text>
           </View>
         </View>
         <View>
@@ -107,15 +108,18 @@ const FollowPublishersScreen = ({ navigation }) => {
           title="Follow some official publishers ❤️"
           description="Follow some official publishers that you may know and like to get updates on their stories."
         />
-        <View style={{ marginTop: PADDING[24] }}>
-          {publishers.map((publisher) => (
-            <PublisherItem
-              key={publisher.name}
-              imageSrc={publisher.imageSrc}
-              text={publisher.name}
-            />
-          ))}
-        </View>
+        <PublisherSkeleton loading={publisherLoading} />
+        {!publisherLoading && (
+          <View style={{ marginTop: PADDING[24] }}>
+            {publishers.map((publisher) => (
+              <PublisherItem
+                key={publisher.id}
+                publisher={publisher}
+                imageSrc={require("../../../assets/publishers/new-york-times.png")}
+              />
+            ))}
+          </View>
+        )}
       </View>
     </Screen>
   );

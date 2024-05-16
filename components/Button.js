@@ -4,9 +4,8 @@ import {
   View,
   StyleSheet,
   Text,
-  Touchable,
-  Pressable,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 import {
@@ -29,7 +28,9 @@ const Button = ({
   rounded = false,
   block = false,
   iconName = "",
+  alignIcon = "",
   style,
+  loading = false,
 }) => {
   const [onPress, setOnPress] = useState(false);
 
@@ -219,6 +220,12 @@ const Button = ({
   };
 
   const switchOnIcon = () => {
+    if (!block) {
+      return {
+        position: "relative",
+      };
+    }
+
     if (rounded) {
       return {
         left: 20,
@@ -228,6 +235,16 @@ const Button = ({
     return {
       left: 10,
     };
+  };
+
+  const switchOnLoading = () => {
+    if (loading) {
+      return {
+        opacity: 0.5,
+      };
+    }
+
+    return {};
   };
 
   return (
@@ -244,9 +261,10 @@ const Button = ({
             switchOnSize(),
             onShadow(),
             switchOnRounded(),
+            switchOnLoading(),
           ]}
         >
-          {iconName && (
+          {iconName && alignIcon !== "right" && (
             <Ionicons
               name={iconName}
               color={switchOnTextColor().color}
@@ -254,9 +272,20 @@ const Button = ({
               size={20}
             />
           )}
+          {loading && (
+            <ActivityIndicator size="small" color={switchOnTextColor().color} />
+          )}
           <Text style={[styles.text, switchOnTextColor(), switchOnTextSize()]}>
             {children}
           </Text>
+          {iconName && alignIcon === "right" && (
+            <Ionicons
+              name={iconName}
+              color={switchOnTextColor().color}
+              style={[styles.icon, switchOnIcon()]}
+              size={20}
+            />
+          )}
         </View>
       </TouchableOpacity>
     </View>
@@ -270,7 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: BORDER_RADIUS[8],
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center", // Add this
+    alignItems: "center",
   },
   text: {
     fontFamily: FONT_FAMILY_URBANIST.semibold,

@@ -19,10 +19,15 @@ import HomeScreen from "../screens/logged-in/HomeScreen";
 import NotificationScreen from "../screens/logged-in/NotificationScreen";
 import ProfileScreen from "../screens/logged-in/ProfileScreen";
 import RecentStoriesScreen from "../screens/logged-in/RecentStoriesScreen";
+import SettingsScreen from "../screens/logged-in/SettingScreen";
 import TrendingScreen from "../screens/logged-in/TrendingScreen";
 import ViewAuthorPublisherScreen from "../screens/logged-in/ViewAuthorPublisherScreen";
 import ViewPostScreen from "../screens/logged-in/ViewPostScreen";
 import CreatePostScreen from "../screens/logged-in/create-post/CreatePostScreen";
+import PostPublishedSceeen from "../screens/logged-in/create-post/PostPublishedScreen";
+import TagsPostScreen from "../screens/logged-in/create-post/TagsPostScreen";
+import CustomizeNewsFeedScreen from "../screens/logged-in/settings/CustomizeNewsFeedScreen";
+import CustomizeNotificationsScreen from "../screens/logged-in/settings/CustomizeNotificationsScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,7 +45,7 @@ const TabStack = () => (
     }}
   >
     <Tab.Screen
-      name="HomeScreenr"
+      name="HomeScreen"
       component={HomeScreen}
       options={({ navigation }) => ({
         headerLeft: HomeHeader,
@@ -135,9 +140,12 @@ const TabStack = () => (
     <Tab.Screen
       name="Profile"
       component={ProfileScreen}
-      options={{
+      options={({ navigation }) => ({
         headerTitle: "Profile",
         tabBarLabel: "Profile",
+        headerLeftContainerStyle: {
+          paddingLeft: PADDING[16],
+        },
         headerTitleStyle: {
           fontFamily: FONT_FAMILY_URBANIST.bold,
           fontSize: HEADER_FONT_SIZES.h5,
@@ -145,7 +153,27 @@ const TabStack = () => (
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="person" color={color} size={size} />
         ),
-      }}
+        headerLeft: () => {
+          return <Logo width={26} height={26} />;
+        },
+        headerRight: () => {
+          const onSettings = () => {
+            navigation.navigate("Settings");
+          };
+
+          return (
+            <Ionicons
+              name="cog-outline"
+              size={32}
+              color="black"
+              onPress={onSettings}
+              style={{
+                marginRight: PADDING[16],
+              }}
+            />
+          );
+        },
+      })}
     />
   </Tab.Navigator>
 );
@@ -260,16 +288,7 @@ const LoggedInNavigator = () => (
       component={CommentsScreen}
       options={{
         headerTitle: "Comments (3.2K)",
-        headerStyle: {
-          shadowColor: "transparent",
-          elevation: 0,
-          backgroundColor: THEME_COLORS.white,
-          height: 125,
-        },
-        headerTitleStyle: {
-          fontFamily: FONT_FAMILY_URBANIST.bold,
-          fontSize: HEADER_FONT_SIZES.h6,
-        },
+        ...styles.generalHeaderStyle,
         headerTintColor: THEME_COLORS.black,
         headerLeftLabelVisible: false,
       }}
@@ -279,16 +298,7 @@ const LoggedInNavigator = () => (
       component={ViewAuthorPublisherScreen}
       options={{
         headerTitle: "",
-        headerStyle: {
-          shadowColor: "transparent",
-          elevation: 0,
-          backgroundColor: THEME_COLORS.white,
-          height: 125,
-        },
-        headerTitleStyle: {
-          fontFamily: FONT_FAMILY_URBANIST.bold,
-          fontSize: HEADER_FONT_SIZES.h6,
-        },
+        ...styles.generalHeaderStyle,
         headerTintColor: THEME_COLORS.black,
         headerLeftLabelVisible: false,
         headerRight: () => (
@@ -316,41 +326,80 @@ const LoggedInNavigator = () => (
     <Stack.Screen
       name="CreatePost"
       component={CreatePostScreen}
-      options={({ navigation }) => ({
+      options={() => ({
         headerTitle: "Write Stories",
-        headerStyle: {
-          shadowColor: "transparent",
-          elevation: 0,
-          backgroundColor: THEME_COLORS.white,
-          height: 125,
-        },
-        headerTitleStyle: {
-          fontFamily: FONT_FAMILY_URBANIST.bold,
-          fontSize: HEADER_FONT_SIZES.h6,
-        },
-        headerRight: () => {
-          const onPreview = () => {
-            navigation.navigate("ViewPost");
-          };
-
-          return (
-            <Text
-              style={{
-                marginRight: PADDING[12],
-              }}
-              color={THEME_COLORS.primary}
-              onPress={onPreview}
-              bold
-            >
-              Preview
-            </Text>
-          );
-        },
+        ...styles.generalHeaderStyle,
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="TagPost"
+      component={TagsPostScreen}
+      options={({ navigation }) => ({
+        headerTitle: "",
+        ...styles.generalHeaderStyle,
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="PostPublished"
+      component={PostPublishedSceeen}
+      options={() => ({
+        headerTitle: "",
+        ...styles.generalHeaderStyle,
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+        headerLeft: () => null,
+      })}
+    />
+    <Stack.Screen
+      name="Settings"
+      component={SettingsScreen}
+      options={() => ({
+        headerTitle: "Settings",
+        ...styles.generalHeaderStyle,
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="SettingsCustomizeNewsFeed"
+      component={CustomizeNewsFeedScreen}
+      options={() => ({
+        headerTitle: "Customize Interests",
+        ...styles.generalHeaderStyle,
+        headerTintColor: THEME_COLORS.black,
+        headerLeftLabelVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="SettingsCustomizeNotification"
+      component={CustomizeNotificationsScreen}
+      options={() => ({
+        headerTitle: "Notification",
+        ...styles.generalHeaderStyle,
         headerTintColor: THEME_COLORS.black,
         headerLeftLabelVisible: false,
       })}
     />
   </Stack.Navigator>
 );
+
+const styles = {
+  generalHeaderStyle: {
+    headerStyle: {
+      shadowColor: "transparent",
+      elevation: 0,
+      backgroundColor: THEME_COLORS.white,
+      height: 125,
+    },
+    headerTitleStyle: {
+      fontFamily: FONT_FAMILY_URBANIST.bold,
+      fontSize: HEADER_FONT_SIZES.h6,
+    },
+  },
+};
 
 export default LoggedInNavigator;

@@ -1,12 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Screen from "../../../components/auth/Screen";
 import HeaderTitle from "../../../components/auth/register/HeaderTitle";
 import Input from "../../../components/form/Input";
+import CountrySkeleton from "../../../components/skeletons/CountrySkeleton";
 import Australia from "../../../components/svg/countries/Australia";
 import Belgium from "../../../components/svg/countries/Belgium";
 import Brazil from "../../../components/svg/countries/Brazil";
@@ -21,59 +22,62 @@ import {
   THEME_COLORS,
 } from "../../../constants/colors";
 import { BORDER_RADIUS, PADDING } from "../../../constants/padding";
-import { setRegisterProgress } from "../../../store/auth/reducer";
+import { onboardingStepTwo } from "../../../store/auth/actions";
+import {
+  selectLoading,
+  selectUser,
+  setRegisterProgress,
+} from "../../../store/auth/reducer";
+import { getCountries } from "../../../store/misc/actions";
+import {
+  selectLoading as countrySelectLoading,
+  selectCountries,
+} from "../../../store/misc/reducer";
 
-const countries = [
-  {
-    Icon: UK,
-    text: "United Kingdom",
-  },
-  {
-    Icon: Australia,
-    text: "Australia",
-  },
-  {
-    Icon: Brazil,
-    text: "Brazil",
-  },
-  {
-    Icon: Canada,
-    text: "Canada",
-  },
-  {
-    Icon: China,
-    text: "China",
-  },
-  {
-    Icon: Germany,
-    text: "Germany",
-  },
-  {
-    Icon: Belgium,
-    text: "Beglium",
-  },
-];
+const countryIcons = {
+  UK,
+  AU: Australia,
+  BR: Brazil,
+  CA: Canada,
+  CN: China,
+  DE: Germany,
+  BE: Belgium,
+};
 
 const WhereDoYouComeFromScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const countryLoading = useSelector(countrySelectLoading);
+  const countries = useSelector(selectCountries);
+  const currentUser = useSelector(selectUser);
+
+  console.log("user", currentUser);
+
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [countryInput, setCountryInput] = useState("");
-
-  const dispatch = useDispatch();
 
   useFocusEffect(
     useCallback(() => {
       dispatch(setRegisterProgress(0.2));
+
+      dispatch(getCountries());
       return () => {};
     }, [dispatch]),
   );
 
+  useEffect(() => {
+    if (countries.length > 0) {
+      setSelectedCountry(currentUser.country || countries[0]);
+    }
+  }, [countries]);
+
   const filterByCountryInput = (item) => {
     if (countryInput.length > 0) {
-      if (selectedCountry && selectedCountry.text === item.text) {
+      if (selectedCountry && selectedCountry.name === item.name) {
         return true;
       }
 
-      return item.text.toLowerCase().includes(countryInput.toLowerCase());
+      return item.name.toLowerCase().includes(countryInput.toLowerCase());
     }
 
     return true;
@@ -99,7 +103,7 @@ const WhereDoYouComeFromScreen = ({ navigation }) => {
         <View>
           <Text bold>{text}</Text>
         </View>
-        {selectedCountry && selectedCountry.text === text && (
+        {selectedCountry && selectedCountry.name === text && (
           <View style={{ marginLeft: "auto" }}>
             <Ionicons name="checkmark" size={24} color={THEME_COLORS.primary} />
           </View>
@@ -109,11 +113,21 @@ const WhereDoYouComeFromScreen = ({ navigation }) => {
   };
 
   const onContinue = () => {
-    navigation.navigate("CustomizeYourNewsFeed");
+    dispatch(onboardingStepTwo({ countryId: selectedCountry.id })).then(
+      (response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          navigation.navigate("CustomizeYourNewsFeed");
+        }
+      },
+    );
   };
 
   return (
-    <Screen continueText="Create Account" onContinueHandler={onContinue}>
+    <Screen
+      continueText="Create Account"
+      onContinueHandler={onContinue}
+      loading={loading}
+    >
       <View>
         <HeaderTitle
           title="Where do you come   from? 🗺️"
@@ -126,16 +140,19 @@ const WhereDoYouComeFromScreen = ({ navigation }) => {
             iconName="search"
             onChange={setCountryInput}
           />
-          <View style={styles.countryList}>
-            {countries.filter(filterByCountryInput).map((country) => (
-              <CountryItem
-                key={country.text}
-                Icon={country.Icon}
-                text={country.text}
-                onSelect={() => setSelectedCountry(country)}
-              />
-            ))}
-          </View>
+          <CountrySkeleton loading={countryLoading} />
+          {!countryLoading && countries.length > 0 && (
+            <View style={styles.countryList}>
+              {countries.filter(filterByCountryInput).map((country) => (
+                <CountryItem
+                  key={country.code}
+                  Icon={countryIcons[country.code]}
+                  text={country.name}
+                  onSelect={() => setSelectedCountry(country)}
+                />
+              ))}
+            </View>
+          )}
         </View>
       </View>
     </Screen>

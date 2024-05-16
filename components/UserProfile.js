@@ -6,21 +6,26 @@ import Text from "./typography/Text";
 import { COLOR_GREY_SCALE, THEME_COLORS } from "../constants/colors";
 import { PADDING } from "../constants/padding";
 
-const UserProfile = ({ isOwnProfile = false }) => {
+const UserProfile = ({ user, isOwnProfile = false }) => {
   return (
     <View>
       <View>
         <View style={styles.headerContainer}>
           <View style={styles.headerTitleContainer}>
             <View>
-              <Image source={require("../assets/publishers/cnn.png")} />
+              <Image
+                style={styles.avatar}
+                source={{
+                  uri: user.gravatarUrl,
+                }}
+              />
             </View>
             <View>
               <Text bold size="xlarge">
-                BBC News
+                {user.fullName}
               </Text>
               <Text style={styles.handlerText} size="large">
-                @bbcnews
+                @{user.username}
               </Text>
             </View>
           </View>
@@ -38,10 +43,7 @@ const UserProfile = ({ isOwnProfile = false }) => {
           </View>
         </View>
         <View style={styles.descriptionContainer}>
-          <Text size="large">
-            BBC News is an operational business division of the British
-            Broadcasting Corporation.
-          </Text>
+          <Text size="large">{user.bio}</Text>
           <Text style={styles.websiteText} size="medium">
             www.bbc.com/news
           </Text>
@@ -66,9 +68,6 @@ const UserProfile = ({ isOwnProfile = false }) => {
             Followers
           </Text>
         </View>
-      </View>
-      <View style={{ marginTop: PADDING[16] }}>
-        <StoriesList />
       </View>
     </View>
   );
@@ -116,6 +115,11 @@ const styles = StyleSheet.create({
     borderRightColor: COLOR_GREY_SCALE[300],
     borderRightWidth: 1,
     paddingRight: PADDING[8],
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 50,
   },
 });
 

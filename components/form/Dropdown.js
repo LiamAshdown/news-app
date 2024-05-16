@@ -3,19 +3,25 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
+import Feedback from "./Feedback";
 import { FORM_COLORS, SURFACE_LIGHT_DARK_LIGHT } from "../../constants/colors";
 import { FONT_FAMILY_URBANIST } from "../../constants/font";
 import { BORDER_RADIUS, PADDING } from "../../constants/padding";
 import { BODY_FONT_SIZES } from "../../constants/typography";
+import Text from "../typography/Text";
 
-const Dropdown = ({ disable = false, iconName = "" }) => {
+const Dropdown = ({
+  disable = false,
+  iconName = "",
+  value = null,
+  label = "",
+  values = [],
+  placeholder = "",
+  onChangeHandler = () => {},
+  feedback = null,
+}) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-    { label: "Pear", value: "pear" },
-  ]);
+  const [items, setItems] = useState(values);
 
   const switchOnFocus = () => {
     if (open && !disable) {
@@ -63,6 +69,11 @@ const Dropdown = ({ disable = false, iconName = "" }) => {
 
   return (
     <View>
+      {label && (
+        <Text style={styles.label} bold>
+          {label}
+        </Text>
+      )}
       <View style={[styles.container, switchOnFocus(), switchOnDisable()]}>
         {iconName && (
           <Ionicons
@@ -75,17 +86,21 @@ const Dropdown = ({ disable = false, iconName = "" }) => {
         <DropDownPicker
           open={open}
           value={value}
+          setValue={(test) => onChangeHandler(test())}
           items={items}
           setOpen={setOpen}
-          setValue={setValue}
           setItems={setItems}
-          placeholder="Choose a fruit."
+          listMode="MODAL"
+          placeholder={placeholder}
           style={[styles.input, switchInputOnDisable()]}
           dropDownContainerStyle={styles.dropDownContainerStyle}
           textStyle={styles.textStyle}
           disabled={disable}
         />
       </View>
+      {feedback && (
+        <Feedback variant={feedback.type}>{feedback.message}</Feedback>
+      )}
     </View>
   );
 };
@@ -123,10 +138,14 @@ const styles = StyleSheet.create({
     backgroundColor: SURFACE_LIGHT_DARK_LIGHT[3],
     borderColor: SURFACE_LIGHT_DARK_LIGHT[3],
     fontFamily: FONT_FAMILY_URBANIST.regular,
+    overflow: "visible",
   },
   textStyle: {
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
+  },
+  label: {
+    marginBottom: 4,
   },
 });
 

@@ -22,8 +22,9 @@ const Input = ({
   onChange = null,
   name = "",
   helpText = "",
+  value = "",
+  onSubmitEditing = null,
 }) => {
-  const [text, onChangeText] = useState("");
   const [onFocus, setOnFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,7 +37,7 @@ const Input = ({
   }, []);
 
   const switchFontWeightIfNotEmpty = () => {
-    if (text.length > 0 || disable) {
+    if (value.length > 0 || disable) {
       return FONT_FAMILY_URBANIST.semibold;
     } else {
       return FONT_FAMILY_URBANIST.regular;
@@ -77,7 +78,7 @@ const Input = ({
       return FORM_COLORS.input.focus;
     }
 
-    if (text.length > 0) {
+    if (value.length > 0) {
       return FORM_COLORS.input.text;
     }
 
@@ -124,13 +125,12 @@ const Input = ({
           <TextInput
             placeholder={placeholder}
             placeholderTextColor={FORM_COLORS.input.placeholder}
-            onChangeText={onChangeText}
-            value={text}
+            value={value}
             onFocus={() => setOnFocus(true)}
             onBlur={() => setOnFocus(false)}
             multiline={multiline}
+            onSubmitEditing={onSubmitEditing}
             onChange={(event) => {
-              console.log(onChange);
               if (onChange) {
                 if (name) {
                   onChange(name, event.nativeEvent.text);
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     fontFamily: FONT_FAMILY_URBANIST.semibold,
     fontSize: BODY_FONT_SIZES.xlarge,
-    width: "100%",
+    width: "85%",
   },
   focus: {
     borderStyle: "solid",
@@ -210,10 +210,9 @@ const styles = StyleSheet.create({
   textIcon: {
     flexDirection: "row",
     alignItems: "center",
+    gap: PADDING[4],
   },
-  icon: {
-    marginRight: 12,
-  },
+  icon: {},
   disable: {
     borderColor: FORM_COLORS.input.disable,
     backgroundColor: FORM_COLORS.input.disable,
